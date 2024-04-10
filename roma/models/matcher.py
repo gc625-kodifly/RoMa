@@ -650,7 +650,12 @@ class RegressionMatcher(nn.Module):
                     im_B = self.recrop(certainty[1,0], im_B_path)
                     #TODO: need to adjust corresps when doing this
                 else:
-                    im_A, im_B = Image.open(im_A_path), Image.open(im_B_path)
+                    if isinstance(im_A_path, (str, os.PathLike)):
+                        im_A, im_B = Image.open(im_A_path), Image.open(im_B_path)
+                    else:
+                        # Assume its not a path
+                        im_A, im_B = im_A_path, im_B_path
+                    # im_A, im_B = Image.open(im_A_path), Image.open(im_B_path)
                 im_A, im_B = test_transform((im_A, im_B))
                 im_A, im_B = im_A[None].to(device), im_B[None].to(device)
                 scale_factor = math.sqrt(self.upsample_res[0] * self.upsample_res[1] / (self.w_resized * self.h_resized))

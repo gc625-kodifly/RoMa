@@ -31,3 +31,27 @@ if __name__ == "__main__":
     F, mask = cv2.findFundamentalMat(
         kpts1.cpu().numpy(), kpts2.cpu().numpy(), ransacReprojThreshold=0.2, method=cv2.USAC_MAGSAC, confidence=0.999999, maxIters=10000
     )
+    
+    # draw keypoints
+    print(type(kpts1))
+    
+    H, _ = cv2.findHomography(kpts1.cpu().numpy(), kpts2.cpu().numpy(), method=cv2.RANSAC)
+
+    a = 0.7
+    # Apply Homography Transformation
+    image1 = cv2.imread(im1_path)
+    image2 = cv2.imread(im2_path)
+    height, width, channels = image2.shape
+    warped_image = cv2.warpPerspective(image1, H, (width, height))
+    cv2.imshow("transformed", image2)
+    cv2.imshow("tgt", warped_image)
+    
+    cv2.addWeighted(warped_image, a, image2, 1-a, 0, warped_image)
+    # Display or save the warped image
+    cv2.imshow("Warped Image", warped_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+    
+    
+    

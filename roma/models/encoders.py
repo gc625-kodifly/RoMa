@@ -64,6 +64,8 @@ class VGG19(nn.Module):
         self.amp_dtype = amp_dtype
 
     def forward(self, x, **kwargs):
+        
+        
         with torch.autocast("cuda", enabled=self.amp, dtype = self.amp_dtype):
             feats = {}
             scale = 1
